@@ -9,6 +9,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\OrganizationTypeController;
 use App\Http\Controllers\OrganizationUnitController;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -73,4 +74,9 @@ Route::middleware('auth')->group(function () {
             ->name('organization-units.update-head');
     });
 
+    // MCU Master routes
+    require __DIR__ . '/master.php';
+
+    // MCU Transaction routes
+    require __DIR__ . '/mcu.php';
 });

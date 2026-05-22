@@ -146,6 +146,173 @@
                 </div>
                 @endif
 
+                {{-- Registrasi MCU Submenu --}}
+                <div class="mb-4" x-data="{ open: {{ request()->routeIs('patients.*') || request()->routeIs('mcu-registrations.*') ? 'true' : 'false' }} }">
+                    <button @click="open = !open" 
+                            class="w-full flex items-center justify-between px-4 py-3 text-white rounded-lg hover:bg-green-800 transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-clipboard-check w-5 sidebar-icon mr-3"></i>
+                            <span class="sidebar-text">Registrasi MCU</span>
+                        </div>
+                        <i class="fas fa-chevron-down sidebar-text text-xs transition-transform duration-200" :class="{ 'rotate-180': open }"></i>
+                    </button>
+                    
+                    <div x-show="open" 
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 -translate-y-2"
+                         x-transition:enter-end="opacity-100 translate-y-0"
+                         x-transition:leave="transition ease-in duration-150"
+                         x-transition:leave-start="opacity-100 translate-y-0"
+                         x-transition:leave-end="opacity-0 -translate-y-2"
+                         class="mt-1 ml-4 pl-4 border-l-2 border-green-600 space-y-1">
+                        
+                        <a href="{{ route('patients.index') }}" 
+                           class="flex items-center px-3 py-2 text-green-100 rounded-lg hover:bg-green-800 hover:text-white transition-colors text-sm {{ request()->routeIs('patients.*') ? 'bg-green-800 text-white' : '' }}"
+                           title="Data Pasien">
+                            <i class="fas fa-users w-4 mr-2"></i>
+                            <span class="sidebar-text">Data Pasien</span>
+                        </a>
+                        
+                        <a href="{{ route('mcu-registrations.index') }}" 
+                           class="flex items-center px-3 py-2 text-green-100 rounded-lg hover:bg-green-800 hover:text-white transition-colors text-sm {{ request()->routeIs('mcu-registrations.*') ? 'bg-green-800 text-white' : '' }}"
+                           title="Pendaftaran MCU">
+                            <i class="fas fa-file-medical w-4 mr-2"></i>
+                            <span class="sidebar-text">Pendaftaran MCU</span>
+                        </a>
+                    </div>
+                </div>
+
+                {{-- Pemeriksaan MCU Submenu --}}
+                <div class="mb-4" x-data="{ open: {{ request()->routeIs('mcu-examinations.*') ? 'true' : 'false' }} }">
+                    <button @click="open = !open" 
+                            class="w-full flex items-center justify-between px-4 py-3 text-white rounded-lg hover:bg-green-800 transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-notes-medical w-5 sidebar-icon mr-3"></i>
+                            <span class="sidebar-text">Pemeriksaan MCU</span>
+                        </div>
+                        <i class="fas fa-chevron-down sidebar-text text-xs transition-transform duration-200" :class="{ 'rotate-180': open }"></i>
+                    </button>
+                    
+                    <div x-show="open" 
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 -translate-y-2"
+                         x-transition:enter-end="opacity-100 translate-y-0"
+                         x-transition:leave="transition ease-in duration-150"
+                         x-transition:leave-start="opacity-100 translate-y-0"
+                         x-transition:leave-end="opacity-0 -translate-y-2"
+                         class="mt-1 ml-4 pl-4 border-l-2 border-green-600 space-y-1">
+                        
+                        <a href="{{ route('mcu-examinations.doctor.index') }}" 
+                           class="flex items-center px-3 py-2 text-green-100 rounded-lg hover:bg-green-800 hover:text-white transition-colors text-sm {{ request()->routeIs('mcu-examinations.doctor.*') ? 'bg-green-800 text-white' : '' }}"
+                           title="Konsultasi Dokter">
+                            <i class="fas fa-user-md w-4 mr-2"></i>
+                            <span class="sidebar-text">Konsultasi Dokter</span>
+                        </a>
+
+                        <a href="{{ route('mcu-examinations.anamnesis.index') }}" 
+                           class="flex items-center px-3 py-2 text-green-100 rounded-lg hover:bg-green-800 hover:text-white transition-colors text-sm {{ request()->routeIs('mcu-examinations.anamnesis.*') ? 'bg-green-800 text-white' : '' }}"
+                           title="Anamnesis">
+                            <i class="fas fa-clipboard-list w-4 mr-2"></i>
+                            <span class="sidebar-text">Anamnesis</span>
+                        </a>
+                        
+                        <a href="{{ route('mcu-examinations.physical.index') }}" 
+                           class="flex items-center px-3 py-2 text-green-100 rounded-lg hover:bg-green-800 hover:text-white transition-colors text-sm {{ request()->routeIs('mcu-examinations.physical.*') ? 'bg-green-800 text-white' : '' }}"
+                           title="Pemeriksaan Fisik">
+                            <i class="fas fa-heartbeat w-4 mr-2"></i>
+                            <span class="sidebar-text">Pemeriksaan Fisik</span>
+                        </a>
+                        
+                        <a href="{{ route('mcu-examinations.lab.index') }}" 
+                           class="flex items-center px-3 py-2 text-green-100 rounded-lg hover:bg-green-800 hover:text-white transition-colors text-sm {{ request()->routeIs('mcu-examinations.lab.*') ? 'bg-green-800 text-white' : '' }}"
+                           title="Laboratorium">
+                            <i class="fas fa-flask w-4 mr-2"></i>
+                            <span class="sidebar-text">Laboratorium</span>
+                        </a>
+                        
+                        <a href="{{ route('mcu-examinations.radiology.index') }}" 
+                           class="flex items-center px-3 py-2 text-green-100 rounded-lg hover:bg-green-800 hover:text-white transition-colors text-sm {{ request()->routeIs('mcu-examinations.radiology.*') ? 'bg-green-800 text-white' : '' }}"
+                           title="Radiologi">
+                            <i class="fas fa-x-ray w-4 mr-2"></i>
+                            <span class="sidebar-text">Radiologi</span>
+                        </a>
+                    </div>
+                </div>
+
+                {{-- Resume & Cetak Laporan --}}
+                <div class="mb-4">
+                    <a href="{{ route('mcu-resumes.index') }}" 
+                       class="w-full flex items-center px-4 py-3 text-white rounded-lg hover:bg-green-800 transition-colors {{ request()->routeIs('mcu-resumes.*') ? 'bg-green-800' : '' }}"
+                       title="Resume & Cetak Laporan">
+                        <i class="fas fa-file-medical w-5 sidebar-icon mr-3"></i>
+                        <span class="sidebar-text">Resume & Cetak</span>
+                    </a>
+                </div>
+
+                {{-- Master MCU Submenu --}}
+                <div class="mb-4" x-data="{ open: {{ request()->routeIs('mcu-medical-actions.*', 'mcu-labs.*', 'mcu-radiologies.*', 'mcu-anamneses.*', 'mcu-physical-exams.*', 'mcu-packages.*') ? 'true' : 'false' }} }">
+                    <button @click="open = !open" 
+                            class="w-full flex items-center justify-between px-4 py-3 text-white rounded-lg hover:bg-green-800 transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-stethoscope w-5 sidebar-icon mr-3"></i>
+                            <span class="sidebar-text">Master MCU</span>
+                        </div>
+                        <i class="fas fa-chevron-down sidebar-text text-xs transition-transform duration-200" :class="{ 'rotate-180': open }"></i>
+                    </button>
+                    
+                    <div x-show="open" 
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 -translate-y-2"
+                         x-transition:enter-end="opacity-100 translate-y-0"
+                         x-transition:leave="transition ease-in duration-150"
+                         x-transition:leave-start="opacity-100 translate-y-0"
+                         x-transition:leave-end="opacity-0 -translate-y-2"
+                         class="mt-1 ml-4 pl-4 border-l-2 border-green-600 space-y-1">
+                        
+                        <a href="{{ route('mcu-medical-actions.index') }}" 
+                           class="flex items-center px-3 py-2 text-green-100 rounded-lg hover:bg-green-800 hover:text-white transition-colors text-sm {{ request()->routeIs('mcu-medical-actions.*') ? 'bg-green-800 text-white' : '' }}"
+                           title="Master Tindakan">
+                            <i class="fas fa-user-md w-4 mr-2"></i>
+                            <span class="sidebar-text">Master Tindakan</span>
+                        </a>
+                        
+                        <a href="{{ route('mcu-labs.index') }}" 
+                           class="flex items-center px-3 py-2 text-green-100 rounded-lg hover:bg-green-800 hover:text-white transition-colors text-sm {{ request()->routeIs('mcu-labs.*') ? 'bg-green-800 text-white' : '' }}"
+                           title="Master Lab">
+                            <i class="fas fa-flask w-4 mr-2"></i>
+                            <span class="sidebar-text">Master Lab</span>
+                        </a>
+                        
+                        <a href="{{ route('mcu-radiologies.index') }}" 
+                           class="flex items-center px-3 py-2 text-green-100 rounded-lg hover:bg-green-800 hover:text-white transition-colors text-sm {{ request()->routeIs('mcu-radiologies.*') ? 'bg-green-800 text-white' : '' }}"
+                           title="Master Radiologi">
+                            <i class="fas fa-x-ray w-4 mr-2"></i>
+                            <span class="sidebar-text">Master Radiologi</span>
+                        </a>
+                        
+                        <a href="{{ route('mcu-anamneses.index') }}" 
+                           class="flex items-center px-3 py-2 text-green-100 rounded-lg hover:bg-green-800 hover:text-white transition-colors text-sm {{ request()->routeIs('mcu-anamneses.*') ? 'bg-green-800 text-white' : '' }}"
+                           title="Master Anamnesis">
+                            <i class="fas fa-clipboard-list w-4 mr-2"></i>
+                            <span class="sidebar-text">Master Anamnesis</span>
+                        </a>
+                        
+                        <a href="{{ route('mcu-physical-exams.index') }}" 
+                           class="flex items-center px-3 py-2 text-green-100 rounded-lg hover:bg-green-800 hover:text-white transition-colors text-sm {{ request()->routeIs('mcu-physical-exams.*') ? 'bg-green-800 text-white' : '' }}"
+                           title="Master Pemeriksaan Fisik">
+                            <i class="fas fa-heartbeat w-4 mr-2"></i>
+                            <span class="sidebar-text">Pemeriksaan Fisik</span>
+                        </a>
+
+                        <a href="{{ route('mcu-packages.index') }}" 
+                           class="flex items-center px-3 py-2 text-green-100 rounded-lg hover:bg-green-800 hover:text-white transition-colors text-sm {{ request()->routeIs('mcu-packages.*') ? 'bg-green-800 text-white' : '' }}"
+                           title="Master Paket MCU">
+                            <i class="fas fa-box-open w-4 mr-2"></i>
+                            <span class="sidebar-text">Master Paket MCU</span>
+                        </a>
+                    </div>
+                </div>
+
             </nav>
         </div>
 
