@@ -31,7 +31,7 @@ class McuRegistrationController extends Controller
     public function create()
     {
         $patients = Patient::orderBy('name')->get();
-        $packages = McuPackage::where('status', true)->orderBy('name')->get();
+        $packages = McuPackage::with('items.item')->where('status', true)->orderBy('name')->get();
         return view('mcu.registrations.create', compact('patients', 'packages'));
     }
 
@@ -101,7 +101,15 @@ class McuRegistrationController extends Controller
 
     public function show(McuRegistration $mcuRegistration)
     {
-        $mcuRegistration->load(['patient', 'package', 'examLabs.lab', 'examMedicalActions.medicalAction', 'examRadiologies.radiology', 'examAnamneses.anamnesis', 'examPhysicalExams.physicalExam']);
+        $mcuRegistration->load([
+            'patient', 
+            'package', 
+            'examLabs.lab', 
+            'examMedicalActions.medicalAction', 
+            'examRadiologies.radiology', 
+            'examAnamneses.anamnesis', 
+            'physicalExamResult'
+        ]);
         return view('mcu.registrations.show', compact('mcuRegistration'));
     }
 

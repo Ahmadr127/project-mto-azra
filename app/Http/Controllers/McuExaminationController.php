@@ -67,15 +67,19 @@ class McuExaminationController extends Controller
             foreach ($request->results as $examId => $value) {
                 $exam = $mcuRegistration->examRadiologies()->find($examId);
                 if ($exam) {
+                    $isNormal = isset($request->is_normal[$examId]) && $request->is_normal[$examId] == 1;
                     $exam->update([
-                        'result' => $value,
+                        'result' => json_encode([
+                            'is_normal' => $isNormal,
+                            'findings' => $value ?: ''
+                        ]),
                         'status' => 'completed'
                     ]);
                 }
             }
         }
         $mcuRegistration->update(['status' => 'in_progress']);
-        return redirect()->route('mcu-examinations.radiology.index')->with('success', 'Hasil Radiologi berhasil disimpan.');
+        return redirect()->route('mcu-examinations.radiology.index')->with('success', 'Hasil Penunjang Non-Lab berhasil disimpan.');
     }
     
     // --- ANAMNESIS ---
