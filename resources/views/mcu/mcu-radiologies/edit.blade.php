@@ -1,11 +1,11 @@
 @extends('layouts.app')
-@section('title', 'Edit Master Radiologi')
+@section('title', 'Edit Master Non-Lab')
 
 @section('content')
 <div class="w-full mx-auto">
     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 bg-white border-b border-gray-200">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6">Edit Master Radiologi</h2>
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Edit Master Non-Lab</h2>
 
             <form action="{{ route('mcu-radiologies.update', $mcu_radiologies) }}" method="POST">
                 @csrf

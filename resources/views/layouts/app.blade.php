@@ -232,9 +232,9 @@
                         
                         <a href="{{ route('mcu-examinations.radiology.index') }}" 
                            class="flex items-center px-3 py-2 text-green-100 rounded-lg hover:bg-green-800 hover:text-white transition-colors text-sm {{ request()->routeIs('mcu-examinations.radiology.*') ? 'bg-green-800 text-white' : '' }}"
-                           title="Radiologi">
-                            <i class="fas fa-x-ray w-4 mr-2"></i>
-                            <span class="sidebar-text">Radiologi</span>
+                           title="Penunjang Non-Lab">
+                            <i class="fas fa-heart-pulse w-4 mr-2"></i>
+                            <span class="sidebar-text">Non Labs</span>
                         </a>
                     </div>
                 </div>
@@ -285,9 +285,9 @@
                         
                         <a href="{{ route('mcu-radiologies.index') }}" 
                            class="flex items-center px-3 py-2 text-green-100 rounded-lg hover:bg-green-800 hover:text-white transition-colors text-sm {{ request()->routeIs('mcu-radiologies.*') ? 'bg-green-800 text-white' : '' }}"
-                           title="Master Radiologi">
-                            <i class="fas fa-x-ray w-4 mr-2"></i>
-                            <span class="sidebar-text">Master Radiologi</span>
+                           title="Master Non-Lab">
+                            <i class="fas fa-heart-pulse w-4 mr-2"></i>
+                            <span class="sidebar-text">Master Non-Lab</span>
                         </a>
                         
                         <a href="{{ route('mcu-anamneses.index') }}" 

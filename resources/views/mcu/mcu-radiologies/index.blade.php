@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Kelola Master Radiologi')
+@section('title', 'Kelola Master Non-Lab')
 
 @section('content')
 <div class="w-full mx-auto" x-data="{
@@ -13,9 +13,9 @@
     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 bg-white border-b border-gray-200">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-900">Kelola Master Radiologi</h2>
+                <h2 class="text-2xl font-bold text-gray-900">Kelola Master Non-Lab</h2>
                 <a href="{{ route('mcu-radiologies.create') }}" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-                    Tambah Master Radiologi
+                    Tambah Master Non-Lab
                 </a>
             </div>
         </div>

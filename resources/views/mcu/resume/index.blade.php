@@ -63,11 +63,11 @@
                                 @endif
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm text-center">
-                                <a href="{{ route('mcu-resumes.show', $reg->id) }}" class="text-white bg-blue-500 hover:bg-blue-700 font-bold py-1 px-3 rounded text-xs mr-1">
+                                <a href="{{ route('mcu-resumes.show', $reg->id) }}" class="text-white bg-blue-500 hover:bg-blue-700 font-bold py-1.5 px-3 rounded text-xs mr-1 inline-block shadow-sm" style="background-color: #2563eb; color: #ffffff !important; display: inline-block;">
                                     Review & Resume
                                 </a>
                                 @if($reg->status == 'completed')
-                                <a href="{{ route('mcu-resumes.pdf', $reg->id) }}" target="_blank" class="text-white bg-red-500 hover:bg-red-700 font-bold py-1 px-3 rounded text-xs mt-1 md:mt-0 inline-block">
+                                <a href="{{ route('mcu-resumes.pdf', $reg->id) }}" target="_blank" class="text-white bg-red-500 hover:bg-red-700 font-bold py-1.5 px-3 rounded text-xs mt-1 md:mt-0 inline-block shadow-sm" style="background-color: #dc2626; color: #ffffff !important; display: inline-block;">
                                     Cetak PDF
                                 </a>
                                 @endif

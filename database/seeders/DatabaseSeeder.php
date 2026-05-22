@@ -18,6 +18,10 @@ class DatabaseSeeder extends Seeder
             RolePermissionSeeder::class,
             OrganizationTypeSeeder::class,
             OrganizationUnitSeeder::class,
+            McuAnamnesisSeeder::class,
+            McuLabSeeder::class,
+            McuRadiologySeeder::class,
+            MasterMcuSeeder::class,
         ]);
 
         // Create admin user
