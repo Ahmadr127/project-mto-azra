@@ -45,6 +45,9 @@
                             Role
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Departemen
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Tanggal Dibuat
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -89,6 +92,9 @@
                             @else
                                 <span class="text-gray-500">Tidak ada role</span>
                             @endif
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ $user->organizationUnit ? $user->organizationUnit->name : '-' }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {{ $user->created_at->format('d/m/Y H:i') }}

@@ -2,7 +2,7 @@
 @section('title', 'Antrian Pemeriksaan Fisik')
 
 @section('content')
-<div class="w-full mx-auto max-w-7xl px-2">
+<div class="w-full mx-auto">
     <!-- Modern Clinical Header Banner -->
     <div class="rounded-lg shadow mb-6 overflow-hidden border" style="background-color: #1e293b !important; border-color: #334155 !important;">
         <div class="px-5 py-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">

@@ -66,20 +66,31 @@
                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
                 </div>
 
-                <div class="md:col-span-2">
-                    <label for="role_id" class="block text-sm font-medium text-gray-700">Role</label>
-                    <select id="role_id" name="role_id" required
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
-                        <option value="">Pilih Role</option>
-                        @foreach($roles as $role)
-                            <option value="{{ $role->id }}" {{ old('role_id') == $role->id ? 'selected' : '' }}>
-                                {{ $role->display_name }} - {{ $role->description }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('role_id')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                <div>
+                    <x-searchable-dropdown
+                        name="role_id"
+                        label="Role"
+                        :options="$roles"
+                        value-field="id"
+                        label-field="display_name"
+                        :selected="old('role_id')"
+                        placeholder="Pilih Role"
+                        :required="true"
+                    />
+                </div>
+
+                <div>
+                    <x-searchable-dropdown
+                        name="organization_unit_id"
+                        label="Departemen"
+                        :options="$organizationUnits"
+                        value-field="id"
+                        label-field="name"
+                        :selected="old('organization_unit_id')"
+                        placeholder="Pilih Departemen"
+                        :required="false"
+                        empty-option="Pilih Departemen (Kosong)"
+                    />
                 </div>
 
                 <div class="md:col-span-2 flex justify-end">

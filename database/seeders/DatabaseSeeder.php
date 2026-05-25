@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             McuLabSeeder::class,
             McuRadiologySeeder::class,
             MasterMcuSeeder::class,
+            DemoSeeder::class,
         ]);
 
         // Create admin user

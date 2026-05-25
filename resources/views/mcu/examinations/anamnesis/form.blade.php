@@ -78,7 +78,7 @@
     };
 @endphp
 
-<div class="w-full mx-auto max-w-7xl px-2">
+<div class="w-full mx-auto">
     
     <!-- Modern Clinical Patient Banner -->
     <div class="rounded-lg shadow mb-6 overflow-hidden border" style="background-color: #1e293b !important; border-color: #334155 !important;">
