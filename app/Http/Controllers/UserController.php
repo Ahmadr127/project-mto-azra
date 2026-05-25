@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Role;
+use App\Models\OrganizationUnit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -12,7 +13,7 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $query = User::with('role');
+        $query = User::with(['role', 'organizationUnit']);
 
         // Search filter
         if ($request->filled('search')) {
@@ -41,7 +42,8 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::all();
-        return view('users.create', compact('roles'));
+        $organizationUnits = OrganizationUnit::active()->orderBy('name')->get();
+        return view('users.create', compact('roles', 'organizationUnits'));
     }
 
     public function store(Request $request)
@@ -52,7 +54,8 @@ class UserController extends Controller
             'username' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'role_id' => 'required|exists:roles,id'
+            'role_id' => 'required|exists:roles,id',
+            'organization_unit_id' => 'nullable|exists:organization_units,id'
         ]);
 
         if ($validator->fails()) {
@@ -65,7 +68,8 @@ class UserController extends Controller
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role_id' => $request->role_id
+            'role_id' => $request->role_id,
+            'organization_unit_id' => $request->organization_unit_id
         ]);
 
         return redirect()->route('users.index')->with('success', 'User berhasil dibuat!');
@@ -74,7 +78,8 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $roles = Role::all();
-        return view('users.edit', compact('user', 'roles'));
+        $organizationUnits = OrganizationUnit::active()->orderBy('name')->get();
+        return view('users.edit', compact('user', 'roles', 'organizationUnits'));
     }
 
     public function update(Request $request, User $user)
@@ -85,7 +90,8 @@ class UserController extends Controller
             'username' => 'required|string|max:255|unique:users,username,' . $user->id,
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:8|confirmed',
-            'role_id' => 'required|exists:roles,id'
+            'role_id' => 'required|exists:roles,id',
+            'organization_unit_id' => 'nullable|exists:organization_units,id'
         ]);
 
         if ($validator->fails()) {
@@ -97,7 +103,8 @@ class UserController extends Controller
             'nik' => $request->nik,
             'username' => $request->username,
             'email' => $request->email,
-            'role_id' => $request->role_id
+            'role_id' => $request->role_id,
+            'organization_unit_id' => $request->organization_unit_id
         ];
 
         if ($request->filled('password')) {

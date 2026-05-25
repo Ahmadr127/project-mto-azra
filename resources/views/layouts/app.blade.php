@@ -14,6 +14,9 @@
     
     {{-- Sidebar JS - MUST load before Alpine.js to prevent flicker --}}
     <script src="{{ asset('js/sidebar.js') }}"></script>
+    
+    {{-- AJAX Page Navigation & Alpine.js Hook --}}
+    <script src="{{ asset('js/navigation.js') }}"></script>
 </head>
 <body class="bg-gray-100 overflow-x-hidden h-screen">
     {{-- 
@@ -317,7 +320,7 @@
         </div>
 
         <!-- Main Content Area -->
-        <div class="flex-1 flex flex-col lg:ml-0 overflow-x-hidden max-w-full h-full">
+        <div id="main-content-area" class="flex-1 flex flex-col lg:ml-0 overflow-x-hidden max-w-full h-full">
             <!-- Top Navigation Bar -->
             <header class="bg-white shadow-sm border-b border-gray-200">
                 <div class="flex items-center justify-between h-16 px-6">
