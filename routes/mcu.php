@@ -2,9 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PatientController;
-use App\Http\Controllers\McuRegistrationController;
-use App\Http\Controllers\McuExaminationController;
-use App\Http\Controllers\McuResumeController;
+use App\Http\Controllers\Mcu\Registration\McuRegistrationController;
+use App\Http\Controllers\Mcu\Examination\McuExaminationController;
+use App\Http\Controllers\Mcu\Resume\McuResumeController;
 
 // Registrasi
 Route::get('patients/search', [PatientController::class, 'search'])->name('patients.search');

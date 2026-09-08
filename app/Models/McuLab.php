@@ -10,6 +10,6 @@ class McuLab extends Model
     use HasFactory;
 
     protected $fillable = [
-        'code', 'name', 'category', 'price', 'description', 'display_order', 'status'
+        'code', 'name', 'category', 'price', 'description', 'display_order', 'status', 'normal_value'
     ];
 }

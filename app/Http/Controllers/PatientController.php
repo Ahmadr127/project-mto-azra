@@ -2,33 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Filters\Patient\PatientFilter;
+use App\Http\Requests\Patient\PatientStoreRequest;
+use App\Http\Requests\Patient\PatientUpdateRequest;
 use App\Models\McuPackage;
 use App\Models\Patient;
+use App\Services\Patient\PatientService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class PatientController extends Controller
 {
-    public function index(Request $request)
+    public function __construct(protected PatientService $patientService) {}
+    public function index(Request $request, PatientFilter $filter)
     {
-        $query = Patient::query();
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('patient_code', 'like', "%{$search}%")
-                    ->orWhere('nik', 'like', "%{$search}%");
-            });
-        }
-        // Optional per-column filters (if data-table reused)
-        foreach (['patient_code', 'nik', 'name'] as $field) {
-            if ($request->filled('filter_'.$field)) {
-                $query->where($field, 'like', '%'.$request->input('filter_'.$field).'%');
-            }
-        }
-        $perPage = (int) $request->input('per_page', 10);
-        $perPage = in_array($perPage, [10, 25, 50, 100]) ? $perPage : 10;
-        $patients = $query->latest()->paginate($perPage)->withQueryString();
+        $query = $filter->apply(Patient::query());
+        $patients = $query->latest()->paginate($filter->perPage())->withQueryString();
 
         return view('mcu.patients.index', compact('patients'));
     }
@@ -38,35 +27,11 @@ class PatientController extends Controller
         return view('mcu.patients.create');
     }
 
-    public function store(Request $request)
+    public function store(PatientStoreRequest $request)
     {
-        $validated = $request->validate([
-            'patient_code' => 'required|string|unique:patients,patient_code',
-            'nik' => 'nullable|string|max:16',
-            'name' => 'required|string|max:255',
-            'gender' => 'nullable|in:L,P',
-            'birth_place' => 'nullable|string|max:255',
-            'birth_date' => 'nullable|date|before_or_equal:today',
-            'address' => 'nullable|string|max:1000',
-            'kelurahan' => 'nullable|string|max:255',
-            'kecamatan' => 'nullable|string|max:255',
-            'kabupaten_kota' => 'nullable|string|max:255',
-            'provinsi' => 'nullable|string|max:255',
-            'kode_pos' => 'nullable|string|max:10',
-            'phone' => 'nullable|string|max:20',
-            'emergency_phone' => 'nullable|string|max:20',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'department' => 'nullable|string|max:255',
-            'employee_status' => 'nullable|string|max:255',
-            'bpjs' => 'nullable|string|max:50',
-        ]);
+        $validated = $request->validated();
 
-        if ($request->hasFile('photo')) {
-            $validated['photo'] = $request->file('photo')->store('patients', 'public');
-        }
-
-        // keep legacy company not used; ignore
-        Patient::create($validated);
+        $this->patientService->create($validated, $request->file('photo'));
 
         return redirect()->route('patients.index')->with('success', 'Data Pasien berhasil ditambahkan.');
     }
@@ -110,56 +75,23 @@ class PatientController extends Controller
         return view('mcu.patients.edit', compact('patient'));
     }
 
-    public function update(Request $request, Patient $patient)
+    public function update(PatientUpdateRequest $request, Patient $patient)
     {
-        $validated = $request->validate([
-            'patient_code' => 'required|string|unique:patients,patient_code,'.$patient->id,
-            'nik' => 'nullable|string|max:16',
-            'name' => 'required|string|max:255',
-            'gender' => 'nullable|in:L,P',
-            'birth_place' => 'nullable|string|max:255',
-            'birth_date' => 'nullable|date|before_or_equal:today',
-            'address' => 'nullable|string|max:1000',
-            'kelurahan' => 'nullable|string|max:255',
-            'kecamatan' => 'nullable|string|max:255',
-            'kabupaten_kota' => 'nullable|string|max:255',
-            'provinsi' => 'nullable|string|max:255',
-            'kode_pos' => 'nullable|string|max:10',
-            'phone' => 'nullable|string|max:20',
-            'emergency_phone' => 'nullable|string|max:20',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'department' => 'nullable|string|max:255',
-            'employee_status' => 'nullable|string|max:255',
-            'bpjs' => 'nullable|string|max:50',
-        ]);
+        $validated = $request->validated();
 
-        if ($request->hasFile('photo')) {
-            // delete old
-            if ($patient->photo && Storage::disk('public')->exists($patient->photo)) {
-                Storage::disk('public')->delete($patient->photo);
-            }
-            $validated['photo'] = $request->file('photo')->store('patients', 'public');
-        } else {
-            unset($validated['photo']);
-        }
-
-        // handle remove photo checkbox
-        if ($request->boolean('remove_photo') && $patient->photo) {
-            Storage::disk('public')->delete($patient->photo);
-            $validated['photo'] = null;
-        }
-
-        $patient->update($validated);
+        $this->patientService->update(
+            $patient,
+            $validated,
+            $request->file('photo'),
+            $request->boolean('remove_photo')
+        );
 
         return redirect()->route('patients.index')->with('success', 'Data Pasien berhasil diperbarui.');
     }
 
     public function destroy(Patient $patient)
     {
-        if ($patient->photo && Storage::disk('public')->exists($patient->photo)) {
-            Storage::disk('public')->delete($patient->photo);
-        }
-        $patient->delete();
+        $this->patientService->delete($patient);
 
         return redirect()->route('patients.index')->with('success', 'Data Pasien berhasil dihapus.');
     }

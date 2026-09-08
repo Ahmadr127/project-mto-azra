@@ -1,12 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\McuMedicalActionController;
-use App\Http\Controllers\McuLabController;
-use App\Http\Controllers\McuRadiologyController;
-use App\Http\Controllers\McuAnamnesisController;
-use App\Http\Controllers\McuPhysicalExamController;
-use App\Http\Controllers\McuPackageController;
+use App\Http\Controllers\Mcu\Master\McuMedicalActionController;
+use App\Http\Controllers\Mcu\Master\McuLabController;
+use App\Http\Controllers\Mcu\Master\McuRadiologyController;
+use App\Http\Controllers\Mcu\Master\McuAnamnesisController;
+use App\Http\Controllers\Mcu\Master\McuPhysicalExamController;
+use App\Http\Controllers\Mcu\Master\McuPackageController;
 
 Route::resource('mcu-medical-actions', McuMedicalActionController::class);
 Route::resource('mcu-labs', McuLabController::class);

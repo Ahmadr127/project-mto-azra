@@ -16,14 +16,19 @@ return new class extends Migration
             $table->string('username')->nullable()->after('name');
         });
 
-        // Update existing users with a default username based on their email
-        DB::table('users')->whereNull('username')->update([
-            'username' => DB::raw("CONCAT('user_', id)")
-        ]);
+        // Update existing users with a default username based on their id (DB-agnostic)
+        $users = DB::table('users')->whereNull('username')->get();
+        foreach ($users as $user) {
+            DB::table('users')->where('id', $user->id)->update(['username' => 'user_'.$user->id]);
+        }
 
-        // Make username not null and unique
+        // Make username not null and unique (skip change on sqlite which doesn't support ->change without doctrine/dbal)
+        if (DB::getDriverName() !== 'sqlite') {
+            Schema::table('users', function (Blueprint $table) {
+                $table->string('username')->nullable(false)->change();
+            });
+        }
         Schema::table('users', function (Blueprint $table) {
-            $table->string('username')->nullable(false)->change();
             $table->unique('username');
         });
     }
