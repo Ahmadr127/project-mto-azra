@@ -7,6 +7,7 @@ use App\Http\Controllers\McuExaminationController;
 use App\Http\Controllers\McuResumeController;
 
 // Registrasi
+Route::get('patients/search', [PatientController::class, 'search'])->name('patients.search');
 Route::resource('patients', PatientController::class);
 Route::resource('mcu-registrations', McuRegistrationController::class);
 
