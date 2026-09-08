@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
             'username' => 'admin',
             'email' => 'admin@example.com',
             'role_id' => $adminRole->id,
+            'password' => \Illuminate\Support\Facades\Hash::make('rsazra'), // Set a
         ]);
     }
 }

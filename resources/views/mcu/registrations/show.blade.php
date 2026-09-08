@@ -2,7 +2,7 @@
 @section('title', 'Detail Registrasi MCU')
 
 @section('content')
-<div class="w-full mx-auto max-w-4xl">
+<div class="w-full">
     <!-- Header Card -->
     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6 border border-gray-200">
         <div class="p-6 bg-gradient-to-r from-green-600 to-green-700 text-white" style="background: linear-gradient(135deg, #059669 0%, #047857 100%); color: #ffffff;">

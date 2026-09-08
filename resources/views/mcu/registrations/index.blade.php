@@ -7,11 +7,20 @@
         <div class="p-6 bg-white border-b border-gray-200">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold text-gray-900">Registrasi MCU</h2>
-                <a href="{{ route('mcu-registrations.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                <button type="button" @click="$dispatch('open-modal', 'mcuRegistrationModal')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                     Daftar Baru
-                </a>
+                </button>
             </div>
         </div>
+
+        {{-- Modal Form Pendaftaran --}}
+        @include('mcu.registrations._modal', ['patients' => $patients ?? collect(), 'packages' => $packages ?? collect(), 'selectedPatientId' => null, 'modalId' => 'mcuRegistrationModal'])
+
+        @if($errors->any())
+            <div class="mx-6 mt-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+                Terdapat kesalahan pada form pendaftaran. Modal akan terbuka otomatis.
+            </div>
+        @endif
 
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
@@ -48,4 +57,14 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    @if($errors->any())
+        setTimeout(() => window.dispatchEvent(new CustomEvent('open-modal', { detail: 'mcuRegistrationModal' })), 400);
+    @endif
+});
+</script>
+@endpush
 @endsection

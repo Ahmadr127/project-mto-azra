@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Sistem')</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="icon" type="image/x-icon" href="{{ asset('images/logo.png') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -346,6 +349,31 @@
                         </div>
                     </div>
                     
+                    {{-- Topbar RM Search - full width --}}
+                    <div class="hidden lg:flex items-center flex-1 justify-center mx-8">
+                        <form action="{{ route('patients.search') }}" method="GET" class="w-full relative flex items-center">
+                            <div class="relative w-full">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-magnifying-glass text-gray-400 text-xs"></i>
+                                </div>
+                                <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari No. RM / NIK..."
+                                       class="block w-full pl-9 pr-20 py-2 border border-gray-300 rounded-lg leading-5 bg-gray-50 placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-green-500 focus:border-green-500 sm:text-sm transition"
+                                       autocomplete="off">
+                                <button type="submit" class="absolute inset-y-0 right-0 px-4 text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-r-lg transition">
+                                    <i class="fas fa-arrow-right text-xs"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    {{-- Mobile RM Search Toggle --}}
+                    <div class="flex lg:hidden items-center">
+                        <form action="{{ route('patients.search') }}" method="GET" class="relative">
+                            <input type="text" name="q" placeholder="No. RM" class="w-24 pl-7 pr-2 py-1.5 text-xs border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-1 focus:ring-green-500">
+                            <i class="fas fa-search absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 text-[10px]"></i>
+                        </form>
+                    </div>
+
                     <div class="flex items-center space-x-3">
                         <!-- User Dropdown -->
                         <div class="relative" x-data="{ open: false }" @click.away="open = false">
