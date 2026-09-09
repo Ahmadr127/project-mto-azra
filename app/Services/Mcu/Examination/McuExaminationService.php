@@ -3,7 +3,11 @@
 namespace App\Services\Mcu\Examination;
 
 use App\Models\McuRegistration;
+use App\Support\DateRangeHelper;
+use App\Support\SearchHelper;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
 
 class McuExaminationService
 {
@@ -13,6 +17,52 @@ class McuExaminationService
             ->whereIn('status', ['registered','in_progress'])
             ->orderBy('registration_date','asc')
             ->get();
+    }
+
+    public function paginate(Request $request): LengthAwarePaginator
+    {
+        $query = McuRegistration::with(['patient','package'])
+            ->whereIn('status', ['registered','in_progress']);
+
+        // Global search fallback (legacy)
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->whereHas('patient', function ($q) use ($search) {
+                SearchHelper::whereLike($q, 'name', $search, 'and');
+                SearchHelper::whereLike($q, 'patient_code', $search, 'or');
+            });
+        }
+
+        // Per-column filters (data-table) - case-insensitive
+        if ($request->filled('filter_patient')) {
+            $v = $request->filter_patient;
+            $query->whereHas('patient', function ($q) use ($v) {
+                SearchHelper::whereLike($q, 'name', $v, 'and');
+                SearchHelper::whereLike($q, 'patient_code', $v, 'or');
+            });
+        }
+        if ($request->filled('filter_package')) {
+            $v = $request->filter_package;
+            $query->whereHas('package', function ($q) use ($v) {
+                SearchHelper::whereLike($q, 'name', $v);
+            });
+        }
+        // Date range (luar table via date-range-filter) - dinamis default 30 days (ganti ke 60 days / 2 months etc tanpa env)
+        $hasDate = $request->filled('filter_date_from') || $request->filled('filter_date_to');
+        if ($request->filled('filter_date_from')) {
+            $query->whereDate('registration_date', '>=', $request->filter_date_from);
+        }
+        if ($request->filled('filter_date_to')) {
+            $query->whereDate('registration_date', '<=', $request->filter_date_to);
+        }
+        if (!$hasDate) {
+            [$defFrom,$defTo] = DateRangeHelper::parse('30 days');
+            $query->whereDate('registration_date', '>=', $defFrom)->whereDate('registration_date', '<=', $defTo);
+        }
+
+        return $query->orderBy('registration_date','asc')
+            ->paginate($request->input('per_page', 10))
+            ->withQueryString();
     }
 
     public function storeLab(McuRegistration $reg, array $results): void

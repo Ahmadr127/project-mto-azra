@@ -2,6 +2,7 @@
 
 namespace App\Filters\Patient;
 
+use App\Support\SearchHelper;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
@@ -11,21 +12,21 @@ class PatientFilter
 
     public function apply(Builder $query): Builder
     {
-        // Global search (nama, No. RM, NIK)
+        // Global search (nama, No. RM, NIK) - case-insensitive
         if ($this->request->filled('search')) {
             $search = $this->request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('patient_code', 'like', "%{$search}%")
-                    ->orWhere('nik', 'like', "%{$search}%");
+                SearchHelper::whereLike($q, 'name', $search, 'and');
+                SearchHelper::whereLike($q, 'patient_code', $search, 'or');
+                SearchHelper::whereLike($q, 'nik', $search, 'or');
             });
         }
 
-        // Per-column filters (Enter manual, data-table)
+        // Per-column filters (Enter manual, data-table) - case-insensitive
         foreach (['patient_code', 'nik', 'name', 'phone'] as $field) {
             $key = 'filter_'.$field;
             if ($this->request->filled($key)) {
-                $query->where($field, 'like', '%'.$this->request->input($key).'%');
+                SearchHelper::whereLike($query, $field, $this->request->input($key));
             }
         }
 

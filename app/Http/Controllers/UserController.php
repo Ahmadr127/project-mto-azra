@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\OrganizationUnit;
 use App\Models\Role;
 use App\Models\User;
+use App\Support\SearchHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -15,38 +16,38 @@ class UserController extends Controller
     {
         $query = User::with(['role', 'organizationUnit']);
 
-        // Global search (backward compat)
+        // Global search (backward compat) - case-insensitive
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('username', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
+                SearchHelper::whereLike($q, 'name', $search, 'and');
+                SearchHelper::whereLike($q, 'username', $search, 'or');
+                SearchHelper::whereLike($q, 'email', $search, 'or');
             });
         }
 
-        // Per-column filters
+        // Per-column filters - case-insensitive
         if ($request->filled('filter_name')) {
-            $query->where('name', 'like', "%{$request->filter_name}%");
+            SearchHelper::whereLike($query, 'name', $request->filter_name);
         }
         if ($request->filled('filter_nik')) {
-            $query->where('nik', 'like', "%{$request->filter_nik}%");
+            SearchHelper::whereLike($query, 'nik', $request->filter_nik);
         }
         if ($request->filled('filter_username')) {
-            $query->where('username', 'like', "%{$request->filter_username}%");
+            SearchHelper::whereLike($query, 'username', $request->filter_username);
         }
         if ($request->filled('filter_email')) {
-            $query->where('email', 'like', "%{$request->filter_email}%");
+            SearchHelper::whereLike($query, 'email', $request->filter_email);
         }
         if ($request->filled('filter_role')) {
             $query->whereHas('role', function ($q) use ($request) {
-                $q->where('name', 'like', "%{$request->filter_role}%")
-                    ->orWhere('display_name', 'like', "%{$request->filter_role}%");
+                SearchHelper::whereLike($q, 'name', $request->filter_role, 'and');
+                SearchHelper::whereLike($q, 'display_name', $request->filter_role, 'or');
             });
         }
         if ($request->filled('filter_organization')) {
             $query->whereHas('organizationUnit', function ($q) use ($request) {
-                $q->where('name', 'like', "%{$request->filter_organization}%");
+                SearchHelper::whereLike($q, 'name', $request->filter_organization);
             });
         }
 

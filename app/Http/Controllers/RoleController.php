@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use App\Models\Permission;
+use App\Support\SearchHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -13,12 +14,12 @@ class RoleController extends Controller
     {
         $query = Role::with('permissions');
 
-        // Search filter
+        // Search filter - case-insensitive
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('display_name', 'like', "%{$search}%");
+                SearchHelper::whereLike($q, 'name', $search, 'and');
+                SearchHelper::whereLike($q, 'display_name', $search, 'or');
             });
         }
 

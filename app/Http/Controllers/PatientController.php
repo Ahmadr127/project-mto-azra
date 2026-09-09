@@ -8,6 +8,7 @@ use App\Http\Requests\Patient\PatientUpdateRequest;
 use App\Models\McuPackage;
 use App\Models\Patient;
 use App\Services\Patient\PatientService;
+use App\Support\SearchHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -55,12 +56,13 @@ class PatientController extends Controller
 
         $q = trim($request->input('q'));
 
-        // exact first, then like
-        $patient = Patient::where('patient_code', $q)->first();
+        // exact first (case-insensitive), then like
+        $patient = Patient::whereRaw('LOWER(patient_code) = ?', [strtolower($q)])->first();
         if (! $patient) {
-            $patient = Patient::where('patient_code', 'like', "%{$q}%")
-                ->orWhere('nik', 'like', "%{$q}%")
-                ->first();
+            $patient = Patient::where(function ($query) use ($q) {
+                SearchHelper::whereLike($query, 'patient_code', $q, 'and');
+                SearchHelper::whereLike($query, 'nik', $q, 'or');
+            })->first();
         }
 
         if ($patient) {

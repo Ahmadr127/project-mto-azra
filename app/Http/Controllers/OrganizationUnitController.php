@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\OrganizationType;
 use App\Models\OrganizationUnit;
 use App\Models\User;
+use App\Support\SearchHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,12 +15,12 @@ class OrganizationUnitController extends Controller
     {
         $query = OrganizationUnit::with(['type', 'parent', 'head']);
 
-        // Search filter
+        // Search filter - case-insensitive
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('code', 'like', "%{$search}%");
+                SearchHelper::whereLike($q, 'name', $search, 'and');
+                SearchHelper::whereLike($q, 'code', $search, 'or');
             });
         }
 

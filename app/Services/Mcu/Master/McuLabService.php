@@ -3,6 +3,7 @@
 namespace App\Services\Mcu\Master;
 
 use App\Models\McuLab;
+use App\Support\SearchHelper;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 
@@ -13,9 +14,17 @@ class McuLabService
         $query = McuLab::query();
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(fn($q) => $q->where('name', 'like', "%{$search}%")->orWhere('code', 'like', "%{$search}%"));
+            $query->where(function ($q) use ($search) {
+                SearchHelper::whereLike($q, 'name', $search, 'and');
+                SearchHelper::whereLike($q, 'code', $search, 'or');
+            });
         }
-        return $query->orderBy('display_order')->latest()->paginate(10)->withQueryString();
+        // Per-column (data-table) - case-insensitive
+        if ($request->filled('filter_code')) SearchHelper::whereLike($query, 'code', $request->filter_code);
+        if ($request->filled('filter_name')) SearchHelper::whereLike($query, 'name', $request->filter_name);
+        if ($request->filled('filter_category')) SearchHelper::whereLike($query, 'category', $request->filter_category);
+        if ($request->filled('filter_status')) $query->where('status', $request->filter_status);
+        return $query->orderBy('display_order')->latest()->paginate($request->input('per_page', 10))->withQueryString();
     }
 
     public function create(array $data): McuLab
